@@ -107,7 +107,7 @@
       pl: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#eaf6ea"/><circle cx="150" cy="58" r="20" fill="#f4d36a"/><path d="M70 104c30-36 90-36 120 0" fill="#d5ecc8"/></svg>',
       no: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#f7f1ea"/><circle cx="150" cy="58" r="28" fill="none" stroke="#d46a7e" stroke-width="6"/><path d="M132 76l36-36" stroke="#d46a7e" stroke-width="6"/></svg>',
       out: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#e7f2fb"/><rect x="48" y="58" width="120" height="40" rx="10" fill="#f4d7a8"/><circle cx="78" cy="104" r="8" fill="#8aa0ae"/><circle cx="142" cy="104" r="8" fill="#8aa0ae"/><circle cx="230" cy="62" r="16" fill="#f2c7a5"/></svg>',
-      inn: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#f4f0fb"/><circle cx="160" cy="62" r="26" fill="#f6d3e0"/><path d="M148 66c4 6 20 6 24 0" stroke="#d46a7e" stroke-width="3" fill="none"/></svg>',
+      in: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#f4f0fb"/><circle cx="160" cy="62" r="26" fill="#f6d3e0"/><path d="M148 66c4 6 20 6 24 0" stroke="#d46a7e" stroke-width="3" fill="none"/></svg>',
       ph: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#eef3f8"/><rect x="132" y="28" width="56" height="84" rx="10" fill="#f7f7f4" stroke="#c5d0d8" stroke-width="3"/><rect x="142" y="42" width="36" height="28" rx="4" fill="#f6d3d8"/></svg>'
     };
     return pics[key] || pics.fr;
