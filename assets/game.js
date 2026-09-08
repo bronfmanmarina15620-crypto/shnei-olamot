@@ -134,9 +134,9 @@
     el(
       '<div class="panel">' +
       '<p class="ask">2. מה הגוף רוצה לעשות ברגע הזה?</p>' +
-      '<p class="tiny">אפשר ללחוץ מילה, או לכתוב.</p>' +
+      '<p class="tiny">אפשר לבחור כמה.</p>' +
       '<div class="chips" id="chips"></div>' +
-      '<label for="body">או במילים שלך</label>' +
+      '<label for="body">או עוד משהו במילים שלך</label>' +
       '<input id="body" type="text" maxlength="120" />' +
       '<div class="row"><button class="primary" id="next">הלאה</button></div>' +
       '</div>'
@@ -148,21 +148,21 @@
       b.className = "chip";
       b.type = "button";
       b.textContent = word;
-      b.onclick = function () {
-        document.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("on"); });
-        b.classList.add("on");
-        document.getElementById("body").value = word;
-      };
+      b.onclick = function () { b.classList.toggle("on"); };
       box.appendChild(b);
     });
     document.getElementById("next").onclick = function () {
-      body = val("body");
+      const picked = [];
+      document.querySelectorAll(".chip.on").forEach(function (c) { picked.push(c.textContent); });
+      const extra = val("body");
+      if (extra) picked.push(extra);
+      body = picked.join(" ו");
       if (!body) return;
       sayScreen();
     };
   }
   function sayScreen() {
-    const ask = hall === "hot" ? "3. מה תגידי במקום לצעוק או לדחוף?" : "2. מה תגידי בעצמך?";
+    const ask = scene.hint || (hall === "hot" ? "3. מה תגידי בסיפור הזה?" : "2. מה תגידי בעצמך בסיפור הזה?");
     let hintBtn = "";
     if (hall === "voice") {
       hintBtn = '<button class="quiet" id="hint">נתקעתי</button>';
