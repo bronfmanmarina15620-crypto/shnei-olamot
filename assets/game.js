@@ -95,12 +95,33 @@
     );
     document.getElementById("go").onclick = function () { sceneScreen(); };
   }
+
+  function picture(id) {
+    const key = (id || "").split("-")[0];
+    const pics = {
+      sis: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#e7f4ea"/><rect x="46" y="58" width="70" height="46" rx="8" fill="#f4d7b0"/><rect x="196" y="50" width="78" height="54" rx="8" fill="#f7c9c4"/><circle cx="118" cy="48" r="16" fill="#f2c7a5"/><circle cx="210" cy="42" r="16" fill="#f2c7a5"/><path d="M92 78h40M188 74h44" stroke="#d7a48a" stroke-width="4"/></svg>',
+      fr: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#e7f3fb"/><circle cx="118" cy="58" r="18" fill="#f2c7a5"/><circle cx="168" cy="54" r="18" fill="#f6d3b0"/><circle cx="214" cy="60" r="18" fill="#f2c7a5"/><path d="M70 108c18-28 78-28 96 0M150 108c16-26 70-26 86 0" fill="#cfe6c8"/></svg>',
+      sc: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#eef4fb"/><rect x="70" y="28" width="180" height="78" rx="8" fill="#f7f1df"/><path d="M86 48h92M86 64h70" stroke="#c9b89a" stroke-width="4"/><circle cx="230" cy="52" r="10" fill="#f2c7a5"/></svg>',
+      pop: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#eef6f4"/><rect x="54" y="62" width="150" height="16" rx="8" fill="#d7e8c8"/><circle cx="84" cy="48" r="12" fill="#f2c7a5"/><circle cx="118" cy="46" r="12" fill="#f6d3b0"/><circle cx="152" cy="48" r="12" fill="#f2c7a5"/><circle cx="246" cy="70" r="14" fill="#f2c7a5"/></svg>',
+      bg: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#e7f6ea"/><circle cx="168" cy="62" r="22" fill="#f3f7f2" stroke="#7eae78" stroke-width="4"/><path d="M40 108h240" stroke="#b7d7a4" stroke-width="6"/></svg>',
+      pl: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#eaf6ea"/><circle cx="150" cy="58" r="20" fill="#f4d36a"/><path d="M70 104c30-36 90-36 120 0" fill="#d5ecc8"/></svg>',
+      no: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#f7f1ea"/><circle cx="150" cy="58" r="28" fill="none" stroke="#d46a7e" stroke-width="6"/><path d="M132 76l36-36" stroke="#d46a7e" stroke-width="6"/></svg>',
+      out: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#e7f2fb"/><rect x="48" y="58" width="120" height="40" rx="10" fill="#f4d7a8"/><circle cx="78" cy="104" r="8" fill="#8aa0ae"/><circle cx="142" cy="104" r="8" fill="#8aa0ae"/><circle cx="230" cy="62" r="16" fill="#f2c7a5"/></svg>',
+      inn: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#f4f0fb"/><circle cx="160" cy="62" r="26" fill="#f6d3e0"/><path d="M148 66c4 6 20 6 24 0" stroke="#d46a7e" stroke-width="3" fill="none"/></svg>',
+      ph: '<svg viewBox="0 0 320 132" aria-hidden="true"><rect width="320" height="132" fill="#eef3f8"/><rect x="132" y="28" width="56" height="84" rx="10" fill="#f7f7f4" stroke="#c5d0d8" stroke-width="3"/><rect x="142" y="42" width="36" height="28" rx="4" fill="#f6d3d8"/></svg>'
+    };
+    return pics[key] || pics.fr;
+  }
+  function art() {
+    return '<div class="art">' + picture(scene && scene.id) + '</div>';
+  }
   function sceneScreen() {
     const lead = hall === "hot"
       ? "דמייני שזה קורה עכשיו. אין תשובה נכונה."
       : "דמייני שזה קורה עכשיו. את תגידי מה לעשות, לא המשחק.";
     el(
       '<div class="panel">' +
+      art() +
       '<p class="sub">' + (hall === "hot" ? "הרגע החם" : "הקול שלי") + '</p>' +
       '<p class="tiny">' + lead + '</p>' +
       '<p class="scene">' + escapeHtml(scene.text) + '</p>' +
@@ -116,6 +137,7 @@
     const ask = hall === "hot" ? "1. בסיפור הזה, מה את רוצה שיקרה?" : "1. בסיפור הזה, מה את רוצה?";
     el(
       '<div class="panel">' +
+      art() +
       '<p class="scene">' + escapeHtml(scene.text) + '</p>' +
       '<label for="want">' + ask + '</label>' +
       '<textarea id="want" maxlength="180"></textarea>' +
@@ -133,6 +155,7 @@
   function bodyScreen() {
     el(
       '<div class="panel">' +
+      art() +
       '<p class="ask">2. מה הגוף רוצה לעשות ברגע הזה?</p>' +
       '<p class="tiny">אפשר לבחור כמה.</p>' +
       '<div class="chips" id="chips"></div>' +
@@ -169,6 +192,7 @@
     }
     el(
       '<div class="panel">' +
+      art() +
       '<p class="scene">' + escapeHtml(scene.text) + '</p>' +
       '<label for="say">' + ask + '</label>' +
       '<textarea id="say" maxlength="180"></textarea>' +
