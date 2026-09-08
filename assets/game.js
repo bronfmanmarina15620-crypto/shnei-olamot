@@ -80,26 +80,46 @@
     localStorage.removeItem(keyPending);
     startRound();
   }
+  function introScreen() {
+    const title = hall === "hot" ? "הרגע החם" : "הקול שלי";
+    const body = hall === "hot"
+      ? "לפעמים קורה משהו, והגוף נהיה חם. רוצים לצעוק, לדחוף, או לבכות.<br><br>נעשה שלושה דברים, לאט.<br>1. מה את רוצה.<br>2. מה הגוף רוצה.<br>3. מה תגידי במקום."
+      : "לפעמים קשה לדבר, ומישהי אחרת מדברת במקומך.<br><br>כאן את אומרת בעצמך.<br>1. מה את רוצה.<br>2. משפט אחד מהפה שלך.";
+    el(
+      '<div class="panel">' +
+      '<p class="sub">' + title + '</p>' +
+      '<h1>היי ' + name + '</h1>' +
+      '<p class="scene">' + body + '</p>' +
+      '<div class="row"><button class="primary" id="go">בואי נתחיל</button></div>' +
+      '</div>'
+    );
+    document.getElementById("go").onclick = function () { sceneScreen(); };
+  }
   function sceneScreen() {
+    const lead = hall === "hot"
+      ? "דמייני שזה קורה עכשיו. אין תשובה נכונה."
+      : "דמייני שזה קורה עכשיו. את תגידי מה לעשות, לא המשחק.";
     el(
       '<div class="panel">' +
       '<p class="sub">' + (hall === "hot" ? "הרגע החם" : "הקול שלי") + '</p>' +
+      '<p class="tiny">' + lead + '</p>' +
       '<p class="scene">' + escapeHtml(scene.text) + '</p>' +
       '<div class="row">' +
-      '<button class="primary" id="go">זה קורה</button>' +
-      '<button class="quiet" id="skip">סיטואציה אחרת</button>' +
+      '<button class="primary" id="go">בואי נחשוב</button>' +
+      '<button class="quiet" id="skip">סיפור אחר</button>' +
       '</div></div>'
     );
-    document.getElementById("go").onclick = hall === "hot" ? wantScreen : wantScreen;
+    document.getElementById("go").onclick = function () { wantScreen(); };
     document.getElementById("skip").onclick = function () { pickScene(); sceneScreen(); };
   }
   function wantScreen() {
-    const ask = hall === "hot" ? "מה את רוצה עכשיו?" : "מה את רוצה שיהיה?";
+    const ask = hall === "hot" ? "1. מה את רוצה עכשיו?" : "1. מה את רוצה שיהיה?";
+    const ph = hall === "hot" ? "למשל: את התור שלי בחזרה" : "למשל: להיכנס למשחק";
     el(
       '<div class="panel">' +
       '<p class="scene">' + escapeHtml(scene.text) + '</p>' +
       '<label for="want">' + ask + '</label>' +
-      '<textarea id="want" maxlength="180"></textarea>' +
+      '<textarea id="want" maxlength="180" placeholder="' + ph + '"></textarea>' +
       '<div class="row"><button class="primary" id="next">הלאה</button></div>' +
       '</div>'
     );
@@ -113,7 +133,8 @@
   function bodyScreen() {
     el(
       '<div class="panel">' +
-      '<p class="ask">מה הגוף רוצה לעשות?</p>' +
+      '<p class="ask">2. מה הגוף רוצה לעשות ברגע הזה?</p>' +
+      '<p class="tiny">אפשר ללחוץ מילה, או לכתוב.</p>' +
       '<div class="chips" id="chips"></div>' +
       '<label for="body">או במילים שלך</label>' +
       '<input id="body" type="text" maxlength="120" />' +
@@ -141,7 +162,7 @@
     };
   }
   function sayScreen() {
-    const ask = hall === "hot" ? "מה תעשי במקום, ועדיין תקבל משהו ממה שרצית?" : "מה את יכולה להגיד בעצמך?";
+    const ask = hall === "hot" ? "3. מה תגידי במקום לצעוק או לדחוף?" : "2. מה תגידי בעצמך?";
     let hintBtn = "";
     if (hall === "voice") {
       hintBtn = '<button class="quiet" id="hint">נתקעתי</button>';
@@ -217,7 +238,7 @@
   }
   function startRound() {
     pickScene();
-    sceneScreen();
+    introScreen();
   }
   function escapeHtml(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
