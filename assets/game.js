@@ -134,14 +134,14 @@
     document.getElementById("skip").onclick = function () { pickScene(); sceneScreen(); };
   }
   function wantScreen() {
-    const ask = hall === "hot" ? "1. בסיפור הזה, מה את רוצה שיקרה?" : "1. בסיפור הזה, מה את רוצה?";
+    const ask = "קודם, מה את רוצה שיקרה בסוף הסיפור הזה?";
     el(
       '<div class="panel">' +
       art() +
       '<p class="scene">' + escapeHtml(scene.text) + '</p>' +
       '<label for="want">' + ask + '</label>' +
       '<textarea id="want" maxlength="180"></textarea>' +
-      '<p class="tiny">רק על מה שכתוב למעלה. אין דוגמה ממקום אחר.</p>' +
+      '<p class="tiny">כתבי מה שאת רוצה. לא משפט מוכן.</p>' +
       '<div class="row"><button class="primary" id="next">הלאה</button></div>' +
       '</div>'
     );
@@ -185,7 +185,7 @@
     };
   }
   function sayScreen() {
-    const ask = scene.hint || (hall === "hot" ? "3. מה תגידי בסיפור הזה?" : "2. מה תגידי בעצמך בסיפור הזה?");
+    const ask = scene.hint || "מה תגידי עכשיו?";
     let hintBtn = "";
     if (hall === "voice") {
       hintBtn = '<button class="quiet" id="hint">נתקעתי</button>';
@@ -195,10 +195,11 @@
       art() +
       '<p class="scene">' + escapeHtml(scene.text) + '</p>' +
       '<label for="say">' + ask + '</label>' +
+      '<p class="tiny">כתבי כאן את המילים שיוצאות מהפה.</p>' +
       '<textarea id="say" maxlength="180"></textarea>' +
       '<p class="tiny" id="hintbox"></p>' +
       '<div class="row">' +
-      '<button class="primary" id="next">זה המשפט שלי</button>' +
+      '<button class="primary" id="next">זה מה שאני אומרת</button>' +
       hintBtn +
       '</div></div>'
     );
