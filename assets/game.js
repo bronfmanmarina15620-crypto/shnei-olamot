@@ -113,13 +113,13 @@
     document.getElementById("skip").onclick = function () { pickScene(); sceneScreen(); };
   }
   function wantScreen() {
-    const ask = hall === "hot" ? "1. מה את רוצה עכשיו?" : "1. מה את רוצה שיהיה?";
-    const ph = hall === "hot" ? "למשל: את התור שלי בחזרה" : "למשל: להיכנס למשחק";
+    const ask = hall === "hot" ? "1. בסיפור הזה, מה את רוצה שיקרה?" : "1. בסיפור הזה, מה את רוצה?";
     el(
       '<div class="panel">' +
       '<p class="scene">' + escapeHtml(scene.text) + '</p>' +
       '<label for="want">' + ask + '</label>' +
-      '<textarea id="want" maxlength="180" placeholder="' + ph + '"></textarea>' +
+      '<textarea id="want" maxlength="180"></textarea>' +
+      '<p class="tiny">רק על מה שכתוב למעלה. אין דוגמה ממקום אחר.</p>' +
       '<div class="row"><button class="primary" id="next">הלאה</button></div>' +
       '</div>'
     );
