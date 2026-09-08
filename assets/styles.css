@@ -126,3 +126,18 @@ button.quiet { background: transparent; color: var(--muted); font-weight: 600; }
 @media (max-width: 380px) {
   .scene { font-size: 1.3rem; }
 }
+
+.choice {
+  display: block;
+  width: 100%;
+  text-align: right;
+  background: #eef5f2;
+  color: var(--ink);
+  border: 0;
+  border-radius: 16px;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+.choice.on { background: #dcecda; outline: 2px solid var(--leaf); }

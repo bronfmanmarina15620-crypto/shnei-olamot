@@ -83,8 +83,8 @@
   function introScreen() {
     const title = hall === "hot" ? "הרגע החם" : "הקול שלי";
     const body = hall === "hot"
-      ? "לפעמים קורה משהו, והגוף נהיה חם. רוצים לצעוק, לדחוף, או לבכות.<br><br>נעשה שלושה דברים, לאט.<br>1. מה את רוצה.<br>2. מה הגוף רוצה.<br>3. מה תגידי במקום."
-      : "לפעמים קשה לדבר, ומישהי אחרת מדברת במקומך.<br><br>כאן את אומרת בעצמך.<br>1. מה את רוצה.<br>2. משפט אחד מהפה שלך.";
+      ? "קורה משהו, והגוף נהיה חם.<br><br>כאן תבחרי מה אפשר לעשות.<br>אפשר כמה כלים. אין תשובה נכונה אחת."
+      : "קורה משהו, וקשה לדבר.<br><br>כאן תבחרי מה להגיד או לעשות.<br>אפשר כמה כלים. אין תשובה נכונה אחת.";
     el(
       '<div class="panel">' +
       '<p class="sub">' + title + '</p>' +
@@ -116,9 +116,7 @@
     return '<div class="art">' + picture(scene && scene.id) + '</div>';
   }
   function sceneScreen() {
-    const lead = hall === "hot"
-      ? "דמייני שזה קורה עכשיו. אין תשובה נכונה."
-      : "דמייני שזה קורה עכשיו. את תגידי מה לעשות, לא המשחק.";
+    const lead = "דמייני שזה קורה עכשיו.";
     el(
       '<div class="panel">' +
       art() +
@@ -126,12 +124,50 @@
       '<p class="tiny">' + lead + '</p>' +
       '<p class="scene">' + escapeHtml(scene.text) + '</p>' +
       '<div class="row">' +
-      '<button class="primary" id="go">בואי נחשוב</button>' +
+      '<button class="primary" id="go">מה אפשר לעשות</button>' +
       '<button class="quiet" id="skip">סיפור אחר</button>' +
       '</div></div>'
     );
-    document.getElementById("go").onclick = function () { wantScreen(); };
+    document.getElementById("go").onclick = function () { toolsScreen(); };
     document.getElementById("skip").onclick = function () { pickScene(); sceneScreen(); };
+  }
+
+  function toolsScreen() {
+    const choices = scene.opts || [];
+    el(
+      '<div class="panel">' +
+      art() +
+      '<p class="scene">' + escapeHtml(scene.text) + '</p>' +
+      '<p class="ask">מה אפשר לעשות כאן?</p>' +
+      '<p class="tiny">אפשר לבחור כמה. אלה כלים, לא מבחן.</p>' +
+      '<div class="row" id="choices"></div>' +
+      '<label for="extra">או במילים שלך</label>' +
+      '<input id="extra" type="text" maxlength="140" />' +
+      '<div class="row"><button class="primary" id="next">אלה הכלים שאני אנסה</button></div>' +
+      '</div>'
+    );
+    const box = document.getElementById("choices");
+    choices.forEach(function (word) {
+      const b = document.createElement("button");
+      b.className = "choice";
+      b.type = "button";
+      b.textContent = word;
+      b.onclick = function () { b.classList.toggle("on"); };
+      box.appendChild(b);
+    });
+    document.getElementById("next").onclick = function () {
+      const picked = [];
+      document.querySelectorAll(".choice.on").forEach(function (c) { picked.push(c.textContent); });
+      const extra = val("extra");
+      if (extra) picked.push(extra);
+      if (!picked.length) return;
+      sentence = picked.join(". ");
+      want = "";
+      body = "";
+      unusual = checkOdd(sentence);
+      if (unusual) whyScreen();
+      else noteScreen();
+    };
   }
   function wantScreen() {
     const ask = "קודם, מה את רוצה שיקרה בסוף הסיפור הזה?";
