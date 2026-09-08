@@ -16,6 +16,8 @@
   let why = "";
   let hinted = false;
   let unusual = false;
+  let played = 0;
+  const LIMIT = 10;
 
   const odd = /הרביצ|דחפ|מפחד|פחד|כואב|פגע|מכה|חרם|מציק|לא בטוח|להרוג|למות|שונא|בוכה|אלימ/;
 
@@ -80,6 +82,23 @@
     localStorage.removeItem(keyPending);
     startRound();
   }
+
+  function doneScreen() {
+    el(
+      '<div class="panel">' +
+      '<h1>מספיק להיום</h1>' +
+      '<p class="scene">עשית ' + played + ' סיפורים.</p>' +
+      '<p class="sub">אפשר לפתוח שוב מחר. המשפט האחרון נשאר אצלך.</p>' +
+      '</div>'
+    );
+  }
+  function stopHtml() {
+    return '<button class="quiet" id="stopday">מספיק להיום</button>';
+  }
+  function bindStop() {
+    const b = document.getElementById("stopday");
+    if (b) b.onclick = doneScreen;
+  }
   function introScreen() {
     const title = hall === "hot" ? "הרגע החם" : "הקול שלי";
     const body = hall === "hot"
@@ -90,10 +109,11 @@
       '<p class="sub">' + title + '</p>' +
       '<h1>היי ' + name + '</h1>' +
       '<p class="scene">' + body + '</p>' +
-      '<div class="row"><button class="primary" id="go">בואי נתחיל</button></div>' +
+      '<div class="row"><button class="primary" id="go">בואי נתחיל</button>' + stopHtml() + '</div>' +
       '</div>'
     );
     document.getElementById("go").onclick = function () { sceneScreen(); };
+    bindStop();
   }
 
   function picture(id) {
@@ -126,10 +146,12 @@
       '<div class="row">' +
       '<button class="primary" id="go">מה אפשר לעשות</button>' +
       '<button class="quiet" id="skip">סיפור אחר</button>' +
+      stopHtml() +
       '</div></div>'
     );
     document.getElementById("go").onclick = function () { toolsScreen(); };
     document.getElementById("skip").onclick = function () { pickScene(); sceneScreen(); };
+    bindStop();
   }
 
   function toolsScreen() {
@@ -143,7 +165,7 @@
       '<div class="row" id="choices"></div>' +
       '<label for="extra">או במילים שלך</label>' +
       '<input id="extra" type="text" maxlength="140" />' +
-      '<div class="row"><button class="primary" id="next">אלה הכלים שאני אנסה</button></div>' +
+      '<div class="row"><button class="primary" id="next">אלה הכלים שאני אנסה</button>' + stopHtml() + '</div>' +
       '</div>'
     );
     const box = document.getElementById("choices");
@@ -168,6 +190,7 @@
       if (unusual) whyScreen();
       else noteScreen();
     };
+    bindStop();
   }
   function wantScreen() {
     const ask = "קודם, מה את רוצה שיקרה בסוף הסיפור הזה?";
@@ -271,13 +294,26 @@
     };
   }
   function noteScreen() {
+    played += 1;
+    if (played >= LIMIT) {
+      save(keyPending, {
+        scene: scene.text,
+        want: want,
+        body: body,
+        sentence: sentence,
+        why: why,
+        unusual: unusual
+      });
+      doneScreen();
+      return;
+    }
     el(
       '<div class="panel">' +
       '<p class="sub">היום אנסה את זה</p>' +
       '<div class="note">' + escapeHtml(sentence) + '</div>' +
-      '<p class="tiny">בפעם הבאה שתפתחי, תסמני אם ניסית.</p>' +
+      '<p class="tiny">' + played + ' מתוך 10. בפעם הבאה שתפתחי, תסמני אם ניסית.</p>' +
       '<div class="row">' +
-      '<button class="primary" id="more">עוד סיטואציה</button>' +
+      '<button class="primary" id="more">עוד סיפור</button>' +
       '<button class="ghost" id="stop">מספיק להיום</button>' +
       '</div></div>'
     );
@@ -293,9 +329,7 @@
       pickScene();
       sceneScreen();
     };
-    document.getElementById("stop").onclick = function () {
-      el('<div class="panel"><h1>יפה</h1><p class="sub">המשפט נשאר אצלך. בפעם הבאה תסמני אם ניסית.</p></div>');
-    };
+    document.getElementById("stop").onclick = doneScreen;
   }
   function startRound() {
     pickScene();
