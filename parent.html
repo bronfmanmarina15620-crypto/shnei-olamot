@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>מה נעשה</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <main class="wrap" id="app"></main>
+  <script>
+    const KEY = "olamot.parent.password";
+    const app = document.getElementById("app");
+    function load(key) {
+      try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch (e) { return []; }
+    }
+    function gate() {
+      const set = localStorage.getItem(KEY);
+      app.innerHTML =
+        '<div class="panel"><h1>רק אמא</h1>' +
+        '<p class="sub">' + (set ? "סיסמה" : "בחרי סיסמה לטלפון הזה. הן לא רואות את הדף הזה.") + '</p>' +
+        '<input id="pw" type="password" />' +
+        '<div class="row"><button class="primary" id="go">' + (set ? "כניסה" : "שמירה") + '</button></div></div>';
+      document.getElementById("go").onclick = function () {
+        const pw = document.getElementById("pw").value;
+        if (!pw) return;
+        if (!set) { localStorage.setItem(KEY, pw); show(); return; }
+        if (pw !== set) return;
+        show();
+      };
+    }
+    function show() {
+      const eva = load("olamot.eva.visits");
+      const emi = load("olamot.emilia.visits");
+      const all = eva.concat(emi).sort(function (a, b) { return (b.at || "").localeCompare(a.at || ""); });
+      const tried = all.filter(function (v) { return v.mark === "ניסיתי"; }).length;
+      const notYet = all.filter(function (v) { return v.mark === "עוד לא"; }).length;
+      let html = '<div class="panel"><h1>מה נעשה</h1>' +
+        '<p class="sub">רק מה שנשמר בטלפון הזה. לא ציון, ולא השוואה.</p>' +
+        '<p class="sub">סיבובים: ' + all.length + ' · ניסיתי: ' + tried + ' · עוד לא: ' + notYet + '</p>';
+      if (!all.length) html += '<p class="sub">עדיין אין כאן סיבובים. האווה או אמיליה צריכות לשחק על הטלפון הזה קודם.</p>';
+      all.forEach(function (v) {
+        html += '<div class="visit"><strong>' + esc(v.girl || "") + ' · ' + esc(v.mark || "") + '</strong>' +
+          '<div>' + esc(v.scene || "") + '</div>' +
+          (v.sentence ? '<div>משפט: ' + esc(v.sentence) + '</div>' : '') +
+          (v.unusual ? '<div class="flag">חריג. למה: ' + esc(v.why || "") + '</div>' : '') +
+          '</div>';
+      });
+      html += '<div class="row"><button class="ghost" id="out">יצוא</button></div></div>';
+      app.innerHTML = html;
+      document.getElementById("out").onclick = function () {
+        const blob = new Blob([JSON.stringify(all, null, 2)], {type: "application/json"});
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "olamot-visits.json";
+        a.click();
+      };
+    }
+    function esc(s) {
+      return String(s).replace(/[&<>"]/g, function (c) {
+        return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"})[c];
+      });
+    }
+    gate();
+  </script>
+</body>
+</html>
